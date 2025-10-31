@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Form Banding WhatsApp</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle at top, #00111a, #000);
+      overflow: hidden;
+      font-family: 'Poppins', sans-serif;
+      color: #fff;
+    }
+
+    .container {
+      position: relative;
+      background: rgba(0, 255, 170, 0.08);
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+      border-radius: 15px;
+      padding: 40px;
+      width: 320px;
+      text-align: center;
+      backdrop-filter: blur(10px);
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      font-size: 1.4rem;
+      color: #00ffc8;
+      text-shadow: 0 0 10px #00e0ff;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      outline: none;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      text-align: center;
+      background: rgba(0, 255, 255, 0.1);
+      color: white;
+      font-size: 1rem;
+      box-shadow: inset 0 0 5px #00ffcc;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background: linear-gradient(90deg, #00ffcc, #0088ff);
+      border: none;
+      border-radius: 10px;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+      box-shadow: 0 0 10px #00e0ff;
+    }
+
+    button:hover {
+      background: linear-gradient(90deg, #00ddff, #00ffaa);
+      transform: scale(1.05);
+      box-shadow: 0 0 20px #00ffaa;
+    }
+
+    .status {
+      margin-top: 15px;
+      font-size: 0.9rem;
+      min-height: 40px;
+    }
+
+    .footer {
+      position: absolute;
+      bottom: 10px;
+      font-size: 0.8rem;
+      color: #00e0ff;
+      text-shadow: 0 0 5px #00e0ff;
+    }
+
+    .footer a {
+      color: #00ffcc;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    /* animasi fade in */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* loader */
+    .loader {
+      border: 3px solid rgba(255,255,255,0.1);
+      border-top: 3px solid #00ffcc;
+      border-radius: 50%;
+      width: 25px;
+      height: 25px;
+      animation: spin 0.8s linear infinite;
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="particles"></canvas>
+
+  <div class="container">
+    <h2>Form Banding WhatsApp</h2>
+    <input type="text" id="nomor" placeholder="Masukkan Nomor WhatsApp" maxlength="15" />
+    <button onclick="kirimBanding()">Kirim Banding</button>
+    <div class="status" id="status"></div>
+  </div>
+
+  <div class="footer">
+    Powered by <a href="https://t.me/kerasakti6" target="_blank">@kerasakti6</a>
+  </div>
+
+  <script>
+    const statusDiv = document.getElementById('status');
+    const nomorInput = document.getElementById('nomor');
+
+    nomorInput.addEventListener('input', () => {
+      nomorInput.value = nomorInput.value.replace(/[^0-9]/g, '');
+    });
+
+    function kirimBanding() {
+      const nomor = nomorInput.value.trim();
+
+      if (nomor.length < 12) {
+        statusDiv.style.color = "#ff4444";
+        statusDiv.innerText = "⚠️ Nomor tidak valid (minimal 12 digit).";
+        return;
+      }
+
+      if (nomor.length > 15) {
+        statusDiv.style.color = "#ff4444";
+        statusDiv.innerText = "⚠️ Nomor terlalu panjang (maksimal 15 digit).";
+        return;
+      }
+
+      statusDiv.style.color = "#00e0ff";
+      statusDiv.innerHTML = '<div class="loader"></div> Sedang mengirim banding ke WhatsApp Support...';
+
+      setTimeout(() => {
+        const sukses = Math.random() > 0.2;
+        if (sukses) {
+          statusDiv.style.color = "#00ff88";
+          statusDiv.innerHTML = "✅ Berhasil dikirim ke WhatsApp Support!";
+        } else {
+          statusDiv.style.color = "#ff4444";
+          statusDiv.innerHTML = "❌ Gagal mengirim. Silakan coba lagi.";
+        }
+      }, 2500);
+    }
+
+    // partikel lembut
+    const c = document.getElementById("particles");
+    const ctx = c.getContext("2d");
+    c.width = window.innerWidth;
+    c.height = window.innerHeight;
+
+    const particles = Array(80).fill().map(() => ({
+      x: Math.random() * c.width,
+      y: Math.random() * c.height,
+      r: Math.random() * 2,
+      dx: (Math.random() - 0.5) * 0.5,
+      dy: (Math.random() - 0.5) * 0.5
+    }));
+
+    function animate() {
+      ctx.clearRect(0, 0, c.width, c.height);
+      ctx.fillStyle = "#00ffcc";
+      particles.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fill();
+        p.x += p.dx;
+        p.y += p.dy;
+        if (p.x < 0 || p.x > c.width) p.dx *= -1;
+        if (p.y < 0 || p.y > c.height) p.dy *= -1;
+      });
+      requestAnimationFrame(animate);
+    }
+    animate();
+  </script>
+</body>
+</html>
